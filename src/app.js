@@ -10,8 +10,7 @@ let tabComposite = new Composite({
 new ImageView({
   top: 0, left: 0,
   image: {src: '/images/fleepbutton.png', scale: 1.2}
-}).on('tap', () => upload())
-.appendTo(tabComposite)
+}).appendTo(tabComposite)
 
 new ImageView({
   top: 10, left: 190,
@@ -224,6 +223,11 @@ function upload() {
   }) 
 }
 
+let act = new ActivityIndicator({
+  centerX: 0, centerY: 0,
+  visible: false 
+}).appendTo(ui.contentView)
+
 new Button({  
   top: 265, left: 10, width: 80,
   text: 'TEST'
@@ -270,8 +274,3 @@ new Button({
     }).open()    
   })
 }).appendTo(setComposite)
-
-let act = new ActivityIndicator({
-  centerX: 0, centerY: 0,
-  visible: false 
-}).appendTo(ui.contentView)
