@@ -1,101 +1,136 @@
-const {Button,TextInput,TextView,Composite,AlertDialog,ActivityIndicator,ui} = require('tabris')
+const {Button,TextInput,TextView,ImageView,Composite,TabFolder,Tab,AlertDialog,ActivityIndicator,ui} = require('tabris')
 
-ui.statusBar.background = 'black'
-ui.contentView.background = 'black'
+//ui.statusBar.background = 'rgba(0,120,180,0.8)'
 
-let composite = new Composite({
-  top:0, bottom: 0, left: 0, right: 0,
-  background: 'black'
+let tabComposite = new Composite({
+  top: 0, height: 90, left: 0, right: 0,
+  background: 'rgba(0,120,180,0.8)'
 }).appendTo(ui.contentView)
 
+new ImageView({
+  top: 0, left: 0,
+  image: {src: '/images/fleepbutton.png', scale: 1.2}
+}).on('tap', () => upload())
+.appendTo(tabComposite)
+
+new ImageView({
+  top: 10, left: 190,
+  image: {src: '/images/y.png', scale: 1.2}
+}).on('tap', () => upload())
+.appendTo(tabComposite)
+
+new ImageView({
+  top: 10, left: 'prev() 50',
+  image: {src: '/images/a.png', scale: 1.2}
+}).on('tap', () => download())
+.appendTo(tabComposite)
+
+new ImageView({
+  top: 10, left: 'prev() 20',
+  image: {src: '/images/s.png', scale: 1.2}
+}).on('tap', () => clear())
+.appendTo(tabComposite)
+
 new TextView({
-  top: 35, left:10, 
+  top: 10, left: 40,
+  text: 'Fleepbutton', textColor: 'white', font: '18px'
+}).appendTo(tabComposite)
+
+let tabFolder = new TabFolder({
+  top: 42, bottom: 0, left: 0, right: 0, 
+  tabBarLocation: 'top', tabMode: 'fixed', paging: true, textColor: 'white' 
+}).appendTo(ui.contentView)
+
+let settings = new Tab({
+  title: 'settıngs'
+}).appendTo(tabFolder)
+
+let help = new Tab({
+  title: 'help'
+}).appendTo(tabFolder)
+
+let setComposite = new Composite({
+  top: 'prev() 10', bottom: 0, left: 0, right: 0  
+}).appendTo(settings)
+
+new TextView({
+  top: 0, left:10, 
   text: 'WiFi ssid',
   textColor: 'gray', font: '16px'
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 let ssid = new TextInput({  
-  top: 45, left:10, right: 10, 
-  text: localStorage.getItem('ssid'), 
-  font: '20px',
+  top: 10, left:10, right: 10, 
+  text: localStorage.getItem('ssid'), alignment: 'left', 
   borderColor: 'gray'
 }).on('textChanged', event => {
   localStorage.setItem('ssid', event.target.text)    
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 new TextView({
-  top: 95, left:10,  
+  top: 50, left:10,  
   text: 'WiFi password',
   textColor: 'gray', font: '16px'
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 let password = new TextInput({  
-  top: 105, left:10, right: 10,
-  text: localStorage.getItem('password'),  
-  font: '20px',
+  top: 60, left:10, right: 10,
+  text: localStorage.getItem('password'), alignment: 'left',    
   borderColor: 'gray'
 }).on('textChanged', event => {
   localStorage.setItem('password', event.target.text)    
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 new TextView({
-  top: 155, left:10,
+  top: 100, left:10,
   text: 'Fleep webhook link',
   textColor: 'gray', font: '16px'
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 let fleep = new TextInput({  
-  top: 165, left:10, right: 10,
-  text: localStorage.getItem('fleep'), 
-  font: '20px',
+  top: 110, left:10, right: 10,
+  text: localStorage.getItem('fleep'), alignment: 'left',   
   borderColor: 'gray'
 }).on('textChanged', event => {
   localStorage.setItem('fleep', event.target.text)    
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 new TextView({
-  top: 215, left:10,
+  top: 150, left:10,
   text: 'Place',
   textColor: 'gray', font: '16px'
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 let place = new TextInput({  
-  top: 225, left:10, right: 10,
-  text: localStorage.getItem('place'), 
-  font: '20px',
+  top: 160, left:10, right: 10,
+  text: localStorage.getItem('place'), alignment: 'left',  
   borderColor: 'gray'
 }).on('textChanged', event => {
   localStorage.setItem('place', event.target.text)    
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 new TextView({
-  top: 275, left:10,
+  top: 200, left:10,
   text: 'Button',
   textColor: 'gray', font: '16px'
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 let button = new TextInput({  
-  top: 285, left:10, right: 10,
-  text: localStorage.getItem('button'),  
-  font: '20px',
+  top: 210, left:10, right: 10,
+  text: localStorage.getItem('button'), alignment: 'left',  
   borderColor: 'gray'
 }).on('textChanged', event => {
   localStorage.setItem('button', event.target.text)    
-}).appendTo(composite)
+}).appendTo(setComposite)
 
-new Button({  
-  top: 350, left: 8, width: 80,
-  text: 'CLEAR'
-}).on('select', event => {    
-  localStorage.clear()    
-}).appendTo(composite)
+function clear() {
+  localStorage.clear() 
+}
 
-new Button({  
-  top: 350, left: 'prev()', width: 105,
-  text: 'DOWNLOAD'
-}).on('select', event => {
+function download() {
   act.visible = true
-  composite.enabled = false
+  setComposite.enabled = false
+  tabComposite.enabled = false
   let raceTimeout = function(ms){
     let timeout = new Promise((resolve, reject) => {
       let id = setTimeout(() => {
@@ -119,7 +154,8 @@ new Button({
     place.text = response.place
     button.text = response.button     
     act.visible = false
-    composite.enabled = true 
+    setComposite.enabled = true
+    tabComposite.enabled = true 
     new AlertDialog({
       title: 'Download',
       message: 'Configuration downloaded !',
@@ -128,21 +164,20 @@ new Button({
   })
   result.catch(error => {
     act.visible = false
-    composite.enabled = true 
+    setComposite.enabled = true
+    tabComposite.enabled = true 
     new AlertDialog({
       title: 'Download',
       message: 'Can not connect to Button !',
       buttons: {ok: 'OK'}
     }).open() 
   })
-}).appendTo(composite)
+}
 
-new Button({  
-  top: 350, left: 'prev()', width: 80,
-  text: 'UPLOAD'
-}).on('select', event => { 
+function upload() {
   act.visible = true
-  composite.enabled = false 
+  setComposite.enabled = false 
+  tabComposite.enabled = false
   let sendConfigs = {}
   sendConfigs.ssid = localStorage.getItem('ssid')
   sendConfigs.password = localStorage.getItem('password')
@@ -169,7 +204,8 @@ new Button({
   result.then(res => res.json())    
   .then(response => {    
     act.visible = false
-    composite.enabled = true
+    setComposite.enabled = true
+    tabComposite.enabled = true
     new AlertDialog({
       title: 'Upload',
       message: 'Configuration uploaded !',
@@ -178,21 +214,22 @@ new Button({
   })
   result.catch(error => {
     act.visible = false
-    composite.enabled = true 
+    setComposite.enabled = true
+    tabComposite.enabled = true 
     new AlertDialog({
       title: 'Upload',
       message: 'Can not connect to Button !',
       buttons: {ok: 'OK'}
     }).open() 
-  })
-}).appendTo(composite)
+  }) 
+}
 
 new Button({  
-  top: 350, left: 'prev()', width: 80,
+  top: 265, left: 10, width: 80,
   text: 'TEST'
 }).on('select', event => {
   act.visible = true
-  composite.set('enabled', false)
+  setComposite.set('enabled', false)
   let sendConfigs = {'test':'true'}
   let raceTimeout = function(ms){
     let timeout = new Promise((resolve, reject) => {
@@ -214,7 +251,8 @@ new Button({
   result.then(res => res.json())    
   .then(response => {
     act.visible = false
-    composite.enabled = true 
+    setComposite.enabled = true
+    tabComposite.enabled = true 
     new AlertDialog({
       title: 'Test',
       message: 'Test request sent !',
@@ -223,14 +261,15 @@ new Button({
   })
   result.catch(error => {
     act.visible = false
-    composite.enabled = true 
+    setComposite.enabled = true
+    tabComposite.enabled = true 
     new AlertDialog({
       title: 'Test',
       message: 'Can not connect to Button !',
       buttons: {ok: 'OK'}
     }).open()    
   })
-}).appendTo(composite)
+}).appendTo(setComposite)
 
 let act = new ActivityIndicator({
   centerX: 0, centerY: 0,
