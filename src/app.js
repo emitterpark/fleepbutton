@@ -1,38 +1,13 @@
 const {Button,TextInput,TextView,ImageView,Composite,TabFolder,Tab,AlertDialog,ActivityIndicator,ui} = require('tabris')
 
-//ui.statusBar.background = 'rgba(0,120,180,0.8)'
-
 let tabComposite = new Composite({
   top: 0, height: 90, left: 0, right: 0,
   background: 'rgba(0,120,180,0.8)'
 }).appendTo(ui.contentView)
 
 new ImageView({
-  top: 0, left: 0,
-  image: {src: '/images/fleepbutton.png', scale: 1.2}
-}).appendTo(tabComposite)
-
-new ImageView({
-  top: 10, left: 190,
-  image: {src: '/images/y.png', scale: 1.2}
-}).on('tap', () => upload())
-.appendTo(tabComposite)
-
-new ImageView({
-  top: 10, left: 'prev() 50',
-  image: {src: '/images/a.png', scale: 1.2}
-}).on('tap', () => download())
-.appendTo(tabComposite)
-
-new ImageView({
-  top: 10, left: 'prev() 20',
-  image: {src: '/images/s.png', scale: 1.2}
-}).on('tap', () => clear())
-.appendTo(tabComposite)
-
-new TextView({
-  top: 10, left: 40,
-  text: 'Fleepbutton', textColor: 'white', font: '18px'
+  top: 10, left: 20,
+  image: {src: '/images/fleep.png', scale: 2.5}
 }).appendTo(tabComposite)
 
 let tabFolder = new TabFolder({
@@ -41,11 +16,11 @@ let tabFolder = new TabFolder({
 }).appendTo(ui.contentView)
 
 let settings = new Tab({
-  title: 'settıngs'
+  title: 'SETTINGS'
 }).appendTo(tabFolder)
 
 let help = new Tab({
-  title: 'help'
+  title: 'HELP'
 }).appendTo(tabFolder)
 
 let setComposite = new Composite({
@@ -61,7 +36,7 @@ new TextView({
 let ssid = new TextInput({  
   top: 10, left:10, right: 10, 
   text: localStorage.getItem('ssid'), alignment: 'left', 
-  borderColor: 'gray'
+  borderColor: 'rgba(0,120,180,0.8)'
 }).on('textChanged', event => {
   localStorage.setItem('ssid', event.target.text)    
 }).appendTo(setComposite)
@@ -75,7 +50,7 @@ new TextView({
 let password = new TextInput({  
   top: 60, left:10, right: 10,
   text: localStorage.getItem('password'), alignment: 'left',    
-  borderColor: 'gray'
+  borderColor: 'rgba(0,120,180,0.8)'
 }).on('textChanged', event => {
   localStorage.setItem('password', event.target.text)    
 }).appendTo(setComposite)
@@ -89,7 +64,7 @@ new TextView({
 let fleep = new TextInput({  
   top: 110, left:10, right: 10,
   text: localStorage.getItem('fleep'), alignment: 'left',   
-  borderColor: 'gray'
+  borderColor: 'rgba(0,120,180,0.8)'
 }).on('textChanged', event => {
   localStorage.setItem('fleep', event.target.text)    
 }).appendTo(setComposite)
@@ -103,7 +78,7 @@ new TextView({
 let place = new TextInput({  
   top: 160, left:10, right: 10,
   text: localStorage.getItem('place'), alignment: 'left',  
-  borderColor: 'gray'
+  borderColor: 'rgba(0,120,180,0.8)'
 }).on('textChanged', event => {
   localStorage.setItem('place', event.target.text)    
 }).appendTo(setComposite)
@@ -117,7 +92,7 @@ new TextView({
 let button = new TextInput({  
   top: 210, left:10, right: 10,
   text: localStorage.getItem('button'), alignment: 'left',  
-  borderColor: 'gray'
+  borderColor: 'rgba(0,120,180,0.8)'
 }).on('textChanged', event => {
   localStorage.setItem('button', event.target.text)    
 }).appendTo(setComposite)
@@ -128,8 +103,7 @@ function clear() {
 
 function download() {
   act.visible = true
-  setComposite.enabled = false
-  tabComposite.enabled = false
+  setComposite.enabled = false  
   let raceTimeout = function(ms){
     let timeout = new Promise((resolve, reject) => {
       let id = setTimeout(() => {
@@ -153,8 +127,7 @@ function download() {
     place.text = response.place
     button.text = response.button     
     act.visible = false
-    setComposite.enabled = true
-    tabComposite.enabled = true 
+    setComposite.enabled = true    
     new AlertDialog({
       title: 'Download',
       message: 'Configuration downloaded !',
@@ -163,8 +136,7 @@ function download() {
   })
   result.catch(error => {
     act.visible = false
-    setComposite.enabled = true
-    tabComposite.enabled = true 
+    setComposite.enabled = true    
     new AlertDialog({
       title: 'Download',
       message: 'Can not connect to Button !',
@@ -175,8 +147,7 @@ function download() {
 
 function upload() {
   act.visible = true
-  setComposite.enabled = false 
-  tabComposite.enabled = false
+  setComposite.enabled = false   
   let sendConfigs = {}
   sendConfigs.ssid = localStorage.getItem('ssid')
   sendConfigs.password = localStorage.getItem('password')
@@ -203,8 +174,7 @@ function upload() {
   result.then(res => res.json())    
   .then(response => {    
     act.visible = false
-    setComposite.enabled = true
-    tabComposite.enabled = true
+    setComposite.enabled = true    
     new AlertDialog({
       title: 'Upload',
       message: 'Configuration uploaded !',
@@ -213,8 +183,7 @@ function upload() {
   })
   result.catch(error => {
     act.visible = false
-    setComposite.enabled = true
-    tabComposite.enabled = true 
+    setComposite.enabled = true     
     new AlertDialog({
       title: 'Upload',
       message: 'Can not connect to Button !',
@@ -223,17 +192,35 @@ function upload() {
   }) 
 }
 
+new Button({  
+  top: 265, left: 10, width: 110,
+  text: 'CLEAR', textColor: 'white', background: 'rgba(0,120,180,0.8)'
+}).on('select', () => clear())
+.appendTo(setComposite)
+
+new Button({  
+  top: 265, centerX: 0, width: 110,
+  text: 'DOWNLOAD', textColor: 'white', background: 'rgba(0,120,180,0.8)'
+}).on('select', () => download())
+.appendTo(setComposite)
+
+new Button({  
+  top: 265, right: 10, width: 110,
+  text: 'UPLOAD', textColor: 'white', background: 'rgba(0,120,180,0.8)'
+}).on('select', () => upload())
+.appendTo(setComposite)
+
 let act = new ActivityIndicator({
   centerX: 0, centerY: 0,
   visible: false 
 }).appendTo(ui.contentView)
-
+///////////////////////////////////////////////////
 new Button({  
-  top: 265, left: 10, width: 80,
+  top: 450, centerX: 0, width: 200,
   text: 'TEST'
 }).on('select', event => {
   act.visible = true
-  setComposite.set('enabled', false)
+  setComposite.enabled = false
   let sendConfigs = {'test':'true'}
   let raceTimeout = function(ms){
     let timeout = new Promise((resolve, reject) => {
@@ -255,8 +242,7 @@ new Button({
   result.then(res => res.json())    
   .then(response => {
     act.visible = false
-    setComposite.enabled = true
-    tabComposite.enabled = true 
+    setComposite.enabled = true    
     new AlertDialog({
       title: 'Test',
       message: 'Test request sent !',
@@ -265,8 +251,7 @@ new Button({
   })
   result.catch(error => {
     act.visible = false
-    setComposite.enabled = true
-    tabComposite.enabled = true 
+    setComposite.enabled = true    
     new AlertDialog({
       title: 'Test',
       message: 'Can not connect to Button !',
